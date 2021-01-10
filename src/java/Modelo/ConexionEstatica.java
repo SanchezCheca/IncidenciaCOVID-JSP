@@ -2,6 +2,7 @@ package Modelo;
 
 import Auxiliar.Constantes;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -49,33 +50,68 @@ public class ConexionEstatica {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Error de Desconexion", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     /**
-     * Devuelve un objeto Usuario si existe, null si no
+     * Devuelve true si existe el usuario
      *
      * @param correo
      * @return
      */
-    public static Usuario existeUsuario(String correo) {
-        Usuario existe = null;
+    public static boolean existeUsuario(String correo) {
+        boolean existe = false;
         try {
             String sentencia = "SELECT * FROM usuarios WHERE correo = '" + correo + "'";
+            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(sentencia);
+            if (ConexionEstatica.Conj_Registros.next())//Si devuelve true es que existe.
+            {
+                existe = true;
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error en el acceso a la BD.");
+        }
+        return existe;
+    }
+
+    /**
+     * Devuelve un usuario si existe y la combinación correo-pass es correcta
+     *
+     * @param correo
+     * @param pass
+     * @return
+     */
+    public static Usuario getUsuario(String correo, String pass) {
+        Usuario existe = null;
+        try {
+            String sentencia = "SELECT * FROM usuarios WHERE correo = '" + correo + "' AND pass='" + pass + "'";
             ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(sentencia);
             if (ConexionEstatica.Conj_Registros.next())//Si devuelve true es que existe.
             {
                 int id = Conj_Registros.getInt("id");
                 String nombre = Conj_Registros.getString("nombre");
                 int activo = Conj_Registros.getInt("activo");
-                String sexo = Conj_Registros.getString("sexo");
-                int edad = Conj_Registros.getInt("edad");
-                String foto_perfil = Conj_Registros.getString("foto_perfil");
-                int rol = 1;
-                existe = new Usuario(id, correo, nombre, activo, sexo, edad, foto_perfil, rol);
+
+                //Recupera los roles
+                String sentenciaRoles = "SELECT idRol FROM usuario_rol WHERE idUsuario =" + id;
+                ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(sentenciaRoles);
+                ArrayList roles = new ArrayList();
+                while (ConexionEstatica.Conj_Registros.next()) {
+                    roles.add(ConexionEstatica.Conj_Registros.getInt("idRol"));
+                }
+
+                existe = new Usuario(id, nombre, correo, roles, activo);
             }
         } catch (SQLException ex) {
             System.out.println("Error en el acceso a la BD.");
         }
         return existe;//Si devolvemos null el usuario no existe.
+    }
+
+    /**
+     * Inserta un nuevo registro en la tabla usuarios
+     */
+    public static void insertUser(String nombre, String correo, String pass) throws SQLException {
+        String sentencia = "INSERT INTO usuarios VALUES(id, '" + nombre + "', '" + correo + "', '" + pass + "', 0)";
+        ConexionEstatica.Sentencia_SQL.executeUpdate(sentencia);
     }
 
 }

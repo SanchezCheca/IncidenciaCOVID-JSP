@@ -1,5 +1,7 @@
 package Modelo;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author daniel
@@ -10,11 +12,11 @@ public class Usuario {
     private int id;
     private String nombre;
     private String correo;
-    private int[] rol;
+    private ArrayList rol;
     private int activo;
 
     //--------------------CONSTRUCTOR
-    public Usuario(int id, String nombre, String correo, int[] rol, int activo) {
+    public Usuario(int id, String nombre, String correo, ArrayList rol, int activo) {
         this.id = id;
         this.nombre = nombre;
         this.correo = correo;
@@ -27,13 +29,7 @@ public class Usuario {
      * Devuelve true si contiene '1' entre sus roles
      */
     public boolean isAdmin() {
-        boolean resultado = false;
-        for (int i = 0; i < this.rol.length; i++) {
-            if (this.rol[i] == 1) {
-                resultado = true;
-            }
-        }
-        return resultado;
+        return this.rol.contains(1);
     }
     
     /**
@@ -41,13 +37,7 @@ public class Usuario {
      * @return 
      */
     public boolean isAutor() {
-        boolean resultado = false;
-        for (int i = 0; i < this.rol.length; i++) {
-            if (this.rol[i] == 0) {
-                resultado = true;
-            }
-        }
-        return resultado;
+        return this.rol.contains(0);
     }
 
     //--------------------GET
@@ -64,7 +54,7 @@ public class Usuario {
         return correo;
     }
 
-    public int[] getRol() {
+    public ArrayList getRol() {
         return rol;
     }
 
