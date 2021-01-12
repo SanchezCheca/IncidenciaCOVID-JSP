@@ -44,8 +44,23 @@
         } else {
             mensaje = "ERROR: Correo y/o contraseña incorrectos";
         }
-        
+
         session.setAttribute("mensaje", mensaje);
         response.sendRedirect("../index.jsp");
+    }
+
+    //--------------------------------BOTÓN "Iniciar sesión"
+    if (request.getParameter("administrarUsuarios") != null) {
+        String mensaje = "";
+        if (session.getAttribute("usuarioIniciado") != null) {
+            Usuario u = (Usuario) session.getAttribute("usuarioIniciado");
+            if (u.isAdmin()) {
+                //RECIBIR TODOS LOS USUARIOS
+            } else {
+                mensaje = "ERROR: No tienes permiso para ver esta página.";
+            }
+        } else {
+            mensaje = "Ha ocurrido algún error.";
+        }
     }
 %>

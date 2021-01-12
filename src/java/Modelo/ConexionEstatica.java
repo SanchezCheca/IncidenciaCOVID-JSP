@@ -113,5 +113,33 @@ public class ConexionEstatica {
         String sentencia = "INSERT INTO usuarios VALUES(id, '" + nombre + "', '" + correo + "', '" + pass + "', 0)";
         ConexionEstatica.Sentencia_SQL.executeUpdate(sentencia);
     }
+
+    /**
+     * Devuelve un ArrayList con todos los usuarios de la BD
+     */
+    public static void getAllUsers() {
+        ArrayList usuarios = new ArrayList();
+        try {
+            String sentencia = "SELECT * FROM usuarios";
+            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(sentencia);
+            while (ConexionEstatica.Conj_Registros.next()) {
+                int id = Conj_Registros.getInt("id");
+                String nombre = Conj_Registros.getString("nombre");
+                String correo = Conj_Registros.getString("correo");
+                
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error: " + ex.getMessage());
+        }
+    }
     
+    /**
+     * Devuelve un ArrayList con los roles del usuario definido por su id
+     * @param id
+     * @return 
+     */
+    public static ArrayList getRoles(int id) {
+        
+    }
+
 }
