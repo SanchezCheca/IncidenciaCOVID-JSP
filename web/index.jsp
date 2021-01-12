@@ -23,6 +23,7 @@
         <div  class="containter d-flex justify-content-center">
             <div class="row principal rounded">
                 <jsp:include page="recursos/cabecera.jsp"/>
+                
             </div>
         </div>
     </body>

@@ -3,7 +3,6 @@
 <%@page import="java.util.ArrayList"%>
 <%
 
-    
     //--------------------------------BOTÓN "Aceptar registro"
     if (request.getParameter("aceptarRegistro") != null) {
         String correo = request.getParameter("correo");
@@ -14,7 +13,7 @@
         ConexionEstatica.nueva();
 
         String mensaje = "";
-        if (ConexionEstatica.existeUsuario(correo)) {
+        if (!ConexionEstatica.existeUsuario(correo)) {
             ConexionEstatica.insertUser(nombre, correo, pass);
             ConexionEstatica.cerrarBD();
 
@@ -28,5 +27,25 @@
             session.setAttribute("mensaje", mensaje);
             response.sendRedirect("../registro.jsp");
         }
+    }
+
+    //--------------------------------BOTÓN "Iniciar sesión"
+    if (request.getParameter("inicioSesion") != null) {
+        String correo = request.getParameter("correo");
+        String pass = request.getParameter("pass");
+
+        ConexionEstatica.nueva();
+        Usuario u = ConexionEstatica.getUsuario(correo, pass);
+
+        String mensaje = "";
+        if (u != null) {
+            mensaje = "Has iniciado sesión como " + u.getNombre();
+            session.setAttribute("usuarioIniciado", u);
+        } else {
+            mensaje = "ERROR: Correo y/o contraseña incorrectos";
+        }
+        
+        session.setAttribute("mensaje", mensaje);
+        response.sendRedirect("../index.jsp");
     }
 %>

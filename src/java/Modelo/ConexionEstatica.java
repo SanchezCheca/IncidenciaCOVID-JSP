@@ -113,5 +113,5 @@ public class ConexionEstatica {
         String sentencia = "INSERT INTO usuarios VALUES(id, '" + nombre + "', '" + correo + "', '" + pass + "', 0)";
         ConexionEstatica.Sentencia_SQL.executeUpdate(sentencia);
     }
-
+    
 }
