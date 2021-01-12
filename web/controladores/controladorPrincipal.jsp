@@ -36,6 +36,7 @@
 
         ConexionEstatica.nueva();
         Usuario u = ConexionEstatica.getUsuario(correo, pass);
+        ConexionEstatica.cerrarBD();
 
         String mensaje = "";
         if (u != null) {
@@ -55,7 +56,9 @@
         if (session.getAttribute("usuarioIniciado") != null) {
             Usuario u = (Usuario) session.getAttribute("usuarioIniciado");
             if (u.isAdmin()) {
+                ConexionEstatica.nueva();
                 ArrayList usuarios = ConexionEstatica.getAllUsers();
+                ConexionEstatica.cerrarBD();
                 session.setAttribute("usuarios", usuarios);
                 response.sendRedirect("../crud.jsp");
             } else {

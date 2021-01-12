@@ -127,10 +127,19 @@ public class ConexionEstatica {
                 String nombre = Conj_Registros.getString("nombre");
                 String correo = Conj_Registros.getString("correo");
                 int activo = Conj_Registros.getInt("activo");
-                ArrayList roles = ConexionEstatica.getRoles(id);
+                ArrayList roles = new ArrayList();
                 
                 Usuario u = new Usuario(id, nombre, correo, roles, activo);
                 usuarios.add(u);
+            }
+            
+            //Carga los roles de los usuarios
+            for (int i = 0; i < usuarios.size(); i++) {
+                ArrayList roles = new ArrayList();
+                Usuario u = (Usuario) usuarios.get(i);
+                roles = ConexionEstatica.getRoles(u.getId());
+                u.setRol(roles);
+                usuarios.set(i, u);
             }
         } catch (SQLException ex) {
             System.out.println("Error: " + ex.getMessage());
@@ -150,7 +159,8 @@ public class ConexionEstatica {
             String sentencia = "SELECT idRol FROM usuario_rol WHERE idUsuario=" + id;
             ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(sentencia);
             while (ConexionEstatica.Conj_Registros.next()) {
-                roles.add(Conj_Registros.getInt("idRol"));
+                int rol = Conj_Registros.getInt("idRol");
+                roles.add(rol);
             }
         } catch (SQLException ex) {
             System.out.println("Error: " + ex.getMessage());
