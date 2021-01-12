@@ -55,7 +55,9 @@
         if (session.getAttribute("usuarioIniciado") != null) {
             Usuario u = (Usuario) session.getAttribute("usuarioIniciado");
             if (u.isAdmin()) {
-                //RECIBIR TODOS LOS USUARIOS
+                ArrayList usuarios = ConexionEstatica.getAllUsers();
+                session.setAttribute("usuarios", usuarios);
+                response.sendRedirect("../crud.jsp");
             } else {
                 mensaje = "ERROR: No tienes permiso para ver esta página.";
             }
