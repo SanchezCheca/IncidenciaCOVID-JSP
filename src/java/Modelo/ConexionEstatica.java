@@ -3,6 +3,8 @@ package Modelo;
 import Auxiliar.Constantes;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -128,11 +130,11 @@ public class ConexionEstatica {
                 String correo = Conj_Registros.getString("correo");
                 int activo = Conj_Registros.getInt("activo");
                 ArrayList roles = new ArrayList();
-                
+
                 Usuario u = new Usuario(id, nombre, correo, roles, activo);
                 usuarios.add(u);
             }
-            
+
             //Carga los roles de los usuarios
             for (int i = 0; i < usuarios.size(); i++) {
                 ArrayList roles = new ArrayList();
@@ -166,6 +168,75 @@ public class ConexionEstatica {
             System.out.println("Error: " + ex.getMessage());
         }
         return roles;
+    }
+
+    /**
+     * Devuelve el correo de un usuario definido por su id
+     *
+     * @param id
+     * @return
+     */
+    public static String getCorreoById(int id) {
+        String correo = "";
+
+        String sentencia = "SELECT correo FROM usuarios WHERE id=" + id;
+        try {
+            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(sentencia);
+            if (ConexionEstatica.Conj_Registros.next()) {
+                correo = Conj_Registros.getString("correo");
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error en bd: " + ex.getMessage());
+        }
+
+        return correo;
+    }
+
+    /**
+     * Elimina el rol de un usuario
+     *
+     * @param idUsuario
+     * @param idRol
+     */
+    public static void removeRol(int idUsuario, int idRol) {
+        String sentencia = "DELETE FROM usuario_rol WHERE idUsuario=" + idUsuario + " AND idRol=" + idRol;
+        try {
+            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(sentencia);
+        } catch (SQLException ex) {
+            System.out.println("Error en bd: " + ex.getMessage());
+        }
+    }
+
+    /**
+     * Añade un nuevo rol a un usuario
+     *
+     * @param idUsuario
+     * @param rol
+     */
+    public static void addRol(int idUsuario, int rol) {
+        String sentencia = "INSERT INTO usuario_rol VALUES(" + idUsuario + ", " + rol + ")";
+        try {
+            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(sentencia);
+        } catch (SQLException ex) {
+            System.out.println("Error en bd: " + ex.getMessage());
+        }
+    }
+
+    /**
+     * Actualiza los datos de un usuario
+     *
+     * @param id
+     * @param nombre
+     * @param correo
+     * @param activo
+     */
+    public static void updateUser(int id, String nombre, String correo, int activo) {
+        String sentencia = "UPDATE TABLE usuarios SET nombre='" + nombre + "', correo='" + correo + "', activo=" + activo + " WHERE id=" + id;
+        try {
+            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(sentencia);
+        } catch (SQLException ex) {
+            System.out.println("Error en bd: " + ex.getMessage());
+        }
     }
 
 }
