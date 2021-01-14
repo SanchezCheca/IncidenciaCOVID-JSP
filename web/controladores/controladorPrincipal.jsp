@@ -40,8 +40,13 @@
 
         String mensaje = "";
         if (u != null) {
-            mensaje = "Has iniciado sesión como " + u.getNombre();
-            session.setAttribute("usuarioIniciado", u);
+            if (u.getActivo() == 1) {
+                mensaje = "Has iniciado sesión como " + u.getNombre();
+                session.setAttribute("usuarioIniciado", u);
+            } else {
+                mensaje = "Tu cuenta aún no ha sido activada, tienes que esperar a que un administrador la active";
+            }
+
         } else {
             mensaje = "ERROR: Correo y/o contraseña incorrectos";
         }
@@ -50,7 +55,14 @@
         response.sendRedirect("../index.jsp");
     }
 
-    //--------------------------------BOTÓN "Iniciar sesión"
+    //--------------------------------BOTÓN "Cerrar sesión"
+    if (request.getParameter("cerrarSesion") != null) {
+        session.removeAttribute("usuarioIniciado");
+        session.setAttribute("mensaje", "Has cerrado la sesión");
+        response.sendRedirect("../index.jsp");
+    }
+
+    //--------------------------------BOTÓN "Administrar usuarios"
     if (request.getParameter("administrarUsuarios") != null) {
         String mensaje = "";
         if (session.getAttribute("usuarioIniciado") != null) {
@@ -68,4 +80,5 @@
             mensaje = "Ha ocurrido algún error.";
         }
     }
+
 %>

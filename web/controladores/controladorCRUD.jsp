@@ -2,6 +2,9 @@
 <%@page import="Modelo.Usuario"%>
 <%@page import="java.util.ArrayList"%>
 <%
+    /**
+     * Actualiza los roles y valores nombre, correo y activo de un usuario
+     */
     if (request.getParameter("actualizarUsuario") != null) {
         int id = Integer.parseInt(request.getParameter("id"));
         String nombre = request.getParameter("nombre");
@@ -20,7 +23,7 @@
         }
 
         int activo = 0;
-        s = request.getParameterValues("admin");
+        s = request.getParameterValues("activo");
         if (s != null && s.length != 0) {
             activo = 1;
         }
@@ -30,8 +33,10 @@
         ConexionEstatica.nueva();
         ArrayList rolesUsuario = ConexionEstatica.getRoles(id);
         ConexionEstatica.cerrarBD();
+        System.out.println(rolesUsuario);
         for (int i = 0; i < rolesUsuario.size(); i++) {
             int rol = (int) rolesUsuario.get(i);
+            System.out.println("ROL RECOGIDO DEL USUARIO: " + rol);
             if (rol == 1) {
                 esAdmin = true;
             }
@@ -42,7 +47,7 @@
         for (int i = 0; i < rolesUsuario.size(); i++) {
             int rol = (int) rolesUsuario.get(i);
             if (rol == 0) {
-                esAdmin = true;
+                esAutor = true;
             }
         }
 
@@ -74,19 +79,37 @@
                 ConexionEstatica.nueva();
                 ConexionEstatica.removeRol(id, 0);
                 ConexionEstatica.cerrarBD();
-            } else {
+            } else if (!esAutor && autor) {
                 ConexionEstatica.nueva();
                 ConexionEstatica.addRol(id, 0);
                 ConexionEstatica.cerrarBD();
             }
-            
+
             //Actualiza los datos del usuario
             ConexionEstatica.nueva();
             ConexionEstatica.updateUser(id, nombre, correo, activo);
-            
+
             session.setAttribute("mensaje", "Se ha actualizado el usuario");
             response.sendRedirect("../controladores/controladorPrincipal.jsp?administrarUsuarios=1");
         }
 
+    }
+
+    /**
+     * Elimina un usuario de la BD y todos sus roles asignados
+     */
+    if (request.getParameter("eliminarUsuario") != null) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        String nombre = request.getParameter("nombre");
+        
+        ConexionEstatica.nueva();
+        ConexionEstatica.removeAllRoles(id);
+        ConexionEstatica.removeUser(id);
+        ConexionEstatica.cerrarBD();
+        
+        String mensaje = "Se ha eliminado al usuario de nombre '" + nombre + "'";
+        session.setAttribute("mensaje", mensaje);
+        
+        response.sendRedirect("../controladores/controladorPrincipal.jsp?administrarUsuarios=1");
     }
 %>

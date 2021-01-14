@@ -186,7 +186,7 @@ public class ConexionEstatica {
                 correo = Conj_Registros.getString("correo");
             }
         } catch (SQLException ex) {
-            System.out.println("Error en bd: " + ex.getMessage());
+            System.out.println("Error en bd (getCorreoById): " + ex.getMessage());
         }
 
         return correo;
@@ -201,9 +201,9 @@ public class ConexionEstatica {
     public static void removeRol(int idUsuario, int idRol) {
         String sentencia = "DELETE FROM usuario_rol WHERE idUsuario=" + idUsuario + " AND idRol=" + idRol;
         try {
-            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(sentencia);
+            ConexionEstatica.Sentencia_SQL.executeUpdate(sentencia);
         } catch (SQLException ex) {
-            System.out.println("Error en bd: " + ex.getMessage());
+            System.out.println("Error en bd (removeRol): " + ex.getMessage());
         }
     }
 
@@ -216,9 +216,9 @@ public class ConexionEstatica {
     public static void addRol(int idUsuario, int rol) {
         String sentencia = "INSERT INTO usuario_rol VALUES(" + idUsuario + ", " + rol + ")";
         try {
-            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(sentencia);
+            ConexionEstatica.Sentencia_SQL.executeUpdate(sentencia);
         } catch (SQLException ex) {
-            System.out.println("Error en bd: " + ex.getMessage());
+            System.out.println("Error en bd (addRol): " + ex.getMessage());
         }
     }
 
@@ -231,11 +231,38 @@ public class ConexionEstatica {
      * @param activo
      */
     public static void updateUser(int id, String nombre, String correo, int activo) {
-        String sentencia = "UPDATE TABLE usuarios SET nombre='" + nombre + "', correo='" + correo + "', activo=" + activo + " WHERE id=" + id;
+        String sentencia = "UPDATE usuarios SET nombre='" + nombre + "', correo='" + correo + "', activo=" + activo + " WHERE id=" + id;
         try {
-            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(sentencia);
+            System.out.println("EJECUTANDO QUERY: " + sentencia);
+            ConexionEstatica.Sentencia_SQL.executeUpdate(sentencia);
         } catch (SQLException ex) {
-            System.out.println("Error en bd: " + ex.getMessage());
+            System.out.println("Error en bd (updateUser): " + ex.getMessage());
+        }
+    }
+    
+    /**
+     * Elimina un usuario de la BD
+     * @param id 
+     */
+    public static void removeUser(int id) {
+        try {
+            String sentencia = "DELETE FROM usuarios WHERE id=" + id;
+            ConexionEstatica.Sentencia_SQL.executeUpdate(sentencia);
+        } catch (SQLException ex) {
+            System.out.println("Error al eliminar: " + ex.getMessage());
+        }
+    }
+    
+    /**
+     * Elimina todos los roles asignados a un usuario
+     * @param id 
+     */
+    public static void removeAllRoles(int id) {
+        try {
+            String sentencia = "DELETE FROM usuario_rol WHERE idUsuario=" + id;
+            ConexionEstatica.Sentencia_SQL.executeUpdate(sentencia);
+        } catch (SQLException ex) {
+            System.out.println("Error al eliminar: " + ex.getMessage());
         }
     }
 
