@@ -239,10 +239,11 @@ public class ConexionEstatica {
             System.out.println("Error en bd (updateUser): " + ex.getMessage());
         }
     }
-    
+
     /**
      * Elimina un usuario de la BD
-     * @param id 
+     *
+     * @param id
      */
     public static void removeUser(int id) {
         try {
@@ -252,10 +253,11 @@ public class ConexionEstatica {
             System.out.println("Error al eliminar: " + ex.getMessage());
         }
     }
-    
+
     /**
      * Elimina todos los roles asignados a un usuario
-     * @param id 
+     *
+     * @param id
      */
     public static void removeAllRoles(int id) {
         try {
@@ -263,6 +265,65 @@ public class ConexionEstatica {
             ConexionEstatica.Sentencia_SQL.executeUpdate(sentencia);
         } catch (SQLException ex) {
             System.out.println("Error al eliminar: " + ex.getMessage());
+        }
+    }
+
+    /**
+     * Devuelve un ArrayList con todas las regiones de la BD
+     *
+     * @return
+     */
+    public static ArrayList getAllRegiones() {
+        ArrayList regiones = new ArrayList();
+        String sentencia = "SELECT * FROM regiones";
+        try {
+            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(sentencia);
+            while (ConexionEstatica.Conj_Registros.next()) {
+                int id = Conj_Registros.getInt("id");
+                String nombre = Conj_Registros.getString("nombre");
+                Region r = new Region(id, nombre);
+                regiones.add(r);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error al recoger: " + ex.getMessage());
+        }
+        return regiones;
+    }
+
+    /**
+     * Elimina una region
+     */
+    public static void removeRegion(int id) {
+        try {
+            String sentencia = "DELETE FROM regiones WHERE id=" + id;
+            ConexionEstatica.Sentencia_SQL.executeUpdate(sentencia);
+            sentencia = "UPDATE informes SET region=0 WHERE region=" + id;
+            ConexionEstatica.Sentencia_SQL.executeUpdate(sentencia);
+        } catch (SQLException ex) {
+            System.out.println("Error al eliminar: " + ex.getMessage());
+        }
+    }
+
+    /**
+     * Inserta una nueva region
+     *
+     * @param nombre
+     */
+    public static void addRegion(String nombre) {
+        String sentencia = "INSERT INTO regiones VALUES(id, '" + nombre + "')";
+        try {
+            ConexionEstatica.Sentencia_SQL.executeUpdate(sentencia);
+        } catch (SQLException ex) {
+            System.out.println("Error: " + ex.getMessage());
+        }
+    }
+    
+    public static void actualizarRegion(int id, String nombre) {
+        try {
+            String sentencia = "UPDATE regiones SET nombre='" + nombre + "' WHERE id=" + id;
+            ConexionEstatica.Sentencia_SQL.executeUpdate(sentencia);
+        } catch (SQLException ex) {
+            System.out.println("Error: " + ex.getMessage());
         }
     }
 

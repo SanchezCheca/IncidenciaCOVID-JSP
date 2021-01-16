@@ -1,6 +1,7 @@
 <%@page import="Modelo.ConexionEstatica"%>
 <%@page import="Modelo.Usuario"%>
 <%@page import="java.util.ArrayList"%>
+<%@page import="Modelo.Region"%>
 <%
 
     //--------------------------------BOTÓN "Aceptar registro"
@@ -78,6 +79,26 @@
             }
         } else {
             mensaje = "Ha ocurrido algún error.";
+        }
+    }
+
+    //--------------------------------BOTÓN "Administrar regiones"
+    if (request.getParameter("administrarRegiones") != null) {
+        if (session.getAttribute("usuarioIniciado") != null) {
+            Usuario u = (Usuario) session.getAttribute("usuarioIniciado");
+            if (u.isAdmin()) {
+                ConexionEstatica.nueva();
+                ArrayList regiones = ConexionEstatica.getAllRegiones();
+                ConexionEstatica.cerrarBD();
+                session.setAttribute("regiones", regiones);
+                response.sendRedirect("../regiones.jsp");
+            } else {
+                session.setAttribute("mensaje", "No tienes permiso para ver esta página");
+                response.sendRedirect("../index.jsp");
+            }
+        } else {
+            session.setAttribute("mensaje", "Ha ocurrido algún error");
+            response.sendRedirect("../index.jsp");
         }
     }
 

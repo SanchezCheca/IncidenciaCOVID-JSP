@@ -1,6 +1,7 @@
 <%@page import="Modelo.ConexionEstatica"%>
 <%@page import="Modelo.Usuario"%>
 <%@page import="java.util.ArrayList"%>
+<%@page import="Modelo.Region"%>
 <%
     /**
      * Actualiza los roles y valores nombre, correo y activo de un usuario
@@ -101,15 +102,62 @@
     if (request.getParameter("eliminarUsuario") != null) {
         int id = Integer.parseInt(request.getParameter("id"));
         String nombre = request.getParameter("nombre");
-        
+
         ConexionEstatica.nueva();
         ConexionEstatica.removeAllRoles(id);
         ConexionEstatica.removeUser(id);
         ConexionEstatica.cerrarBD();
-        
+
         String mensaje = "Se ha eliminado al usuario de nombre '" + nombre + "'";
         session.setAttribute("mensaje", mensaje);
-        
+
         response.sendRedirect("../controladores/controladorPrincipal.jsp?administrarUsuarios=1");
+    }
+
+    /**
+     * Actualiza una región
+     */
+    if (request.getParameter("actualizarRegion") != null) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        String nombre = request.getParameter("nombre");
+
+        ConexionEstatica.nueva();
+        ConexionEstatica.actualizarRegion(id, nombre);
+        ConexionEstatica.cerrarBD();
+
+        String mensaje = "Se ha actualizado la región '" + nombre + "'";
+        session.setAttribute("mensaje", mensaje);
+        response.sendRedirect("../controladores/controladorPrincipal.jsp?administrarRegiones=1");
+    }
+
+    /**
+     * Crrea una nueva región
+     */
+    if (request.getParameter("crearRegion") != null) {
+        String nombre = request.getParameter("nombre");
+
+        ConexionEstatica.nueva();
+        ConexionEstatica.addRegion(nombre);
+        ConexionEstatica.cerrarBD();
+
+        String mensaje = "Se ha creado la región '" + nombre + "'";
+        session.setAttribute("mensaje", mensaje);
+        response.sendRedirect("../controladores/controladorPrincipal.jsp?administrarRegiones=1");
+    }
+
+    /**
+     * Elimina una región
+     */
+    if (request.getParameter("eliminarRegion") != null) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        String nombre = request.getParameter("nombre");
+
+        ConexionEstatica.nueva();
+        ConexionEstatica.removeRegion(id);
+        ConexionEstatica.cerrarBD();
+
+        String mensaje = "Se ha eliminado la región '" + nombre + "'";
+        session.setAttribute("mensaje", mensaje);
+        response.sendRedirect("../controladores/controladorPrincipal.jsp?administrarRegiones=1");
     }
 %>
