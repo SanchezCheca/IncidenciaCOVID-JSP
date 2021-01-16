@@ -101,7 +101,7 @@
                         </tbody>
                     </table>
                 </div>
-
+                <jsp:include page="recursos/footer.jsp"/>
             </div>
 
         </div>

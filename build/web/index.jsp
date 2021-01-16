@@ -24,6 +24,9 @@
             <div class="row principal rounded">
                 <jsp:include page="recursos/cabecera.jsp"/>
                 
+                
+                
+                <jsp:include page="recursos/footer.jsp"/>
             </div>
         </div>
     </body>

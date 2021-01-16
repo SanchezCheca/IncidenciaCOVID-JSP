@@ -51,6 +51,7 @@
                     <p>¿Ya tienes cuenta? <a href="login.jsp">Inicia sesión</a></p>
                 </div>
                 
+                <jsp:include page="recursos/footer.jsp"/>
             </div>
         </div>
     </body>
