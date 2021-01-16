@@ -24,7 +24,7 @@
                         //Ha iniciado sesión, se muestran otras opciones
 
                 %>
-                <form name="menu" action="<?php echo $ruta . 'controladores/controladorPrincipal.php'; ?>" method="POST">
+                <form name="menu" action="controladores/controladorPrincipal.jsp" method="POST">
                     <%                        Usuario u = (Usuario) session.getAttribute("usuarioIniciado");
                         if (u.isAdmin()) {
                     %>

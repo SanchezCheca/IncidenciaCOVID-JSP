@@ -62,4 +62,10 @@ public class Usuario {
         return activo;
     }
     
+    //--------------------SET
+
+    public void setRol(ArrayList rol) {
+        this.rol = rol;
+    }
+    
 }

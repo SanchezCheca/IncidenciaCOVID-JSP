@@ -1,6 +1,7 @@
 <%@page import="Modelo.ConexionEstatica"%>
 <%@page import="Modelo.Usuario"%>
 <%@page import="java.util.ArrayList"%>
+<%@page import="Modelo.Region"%>
 <%
 
     //--------------------------------BOTÓN "Aceptar registro"
@@ -36,16 +37,69 @@
 
         ConexionEstatica.nueva();
         Usuario u = ConexionEstatica.getUsuario(correo, pass);
+        ConexionEstatica.cerrarBD();
 
         String mensaje = "";
         if (u != null) {
-            mensaje = "Has iniciado sesión como " + u.getNombre();
-            session.setAttribute("usuarioIniciado", u);
+            if (u.getActivo() == 1) {
+                mensaje = "Has iniciado sesión como " + u.getNombre();
+                session.setAttribute("usuarioIniciado", u);
+            } else {
+                mensaje = "Tu cuenta aún no ha sido activada, tienes que esperar a que un administrador la active";
+            }
+
         } else {
             mensaje = "ERROR: Correo y/o contraseña incorrectos";
         }
-        
+
         session.setAttribute("mensaje", mensaje);
         response.sendRedirect("../index.jsp");
     }
+
+    //--------------------------------BOTÓN "Cerrar sesión"
+    if (request.getParameter("cerrarSesion") != null) {
+        session.removeAttribute("usuarioIniciado");
+        session.setAttribute("mensaje", "Has cerrado la sesión");
+        response.sendRedirect("../index.jsp");
+    }
+
+    //--------------------------------BOTÓN "Administrar usuarios"
+    if (request.getParameter("administrarUsuarios") != null) {
+        String mensaje = "";
+        if (session.getAttribute("usuarioIniciado") != null) {
+            Usuario u = (Usuario) session.getAttribute("usuarioIniciado");
+            if (u.isAdmin()) {
+                ConexionEstatica.nueva();
+                ArrayList usuarios = ConexionEstatica.getAllUsers();
+                ConexionEstatica.cerrarBD();
+                session.setAttribute("usuarios", usuarios);
+                response.sendRedirect("../crud.jsp");
+            } else {
+                mensaje = "ERROR: No tienes permiso para ver esta página.";
+            }
+        } else {
+            mensaje = "Ha ocurrido algún error.";
+        }
+    }
+
+    //--------------------------------BOTÓN "Administrar regiones"
+    if (request.getParameter("administrarRegiones") != null) {
+        if (session.getAttribute("usuarioIniciado") != null) {
+            Usuario u = (Usuario) session.getAttribute("usuarioIniciado");
+            if (u.isAdmin()) {
+                ConexionEstatica.nueva();
+                ArrayList regiones = ConexionEstatica.getAllRegiones();
+                ConexionEstatica.cerrarBD();
+                session.setAttribute("regiones", regiones);
+                response.sendRedirect("../regiones.jsp");
+            } else {
+                session.setAttribute("mensaje", "No tienes permiso para ver esta página");
+                response.sendRedirect("../index.jsp");
+            }
+        } else {
+            session.setAttribute("mensaje", "Ha ocurrido algún error");
+            response.sendRedirect("../index.jsp");
+        }
+    }
+
 %>
