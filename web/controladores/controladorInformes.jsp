@@ -1,6 +1,9 @@
 <%@page import="Modelo.Usuario"%>
 <%@page import="Modelo.ConexionEstatica"%>
 <%
+    /**
+     * Crea un nuevo informe
+     */
     if (request.getParameter("crearInforme") != null) {
         String semana = request.getParameter("semana");
         String region = request.getParameter("region");
