@@ -1,0 +1,1 @@
+Este archivo evita errores con git.
