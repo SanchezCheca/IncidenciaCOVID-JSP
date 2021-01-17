@@ -78,7 +78,7 @@
                                     for (int i = 1; i < regiones.size(); i++) {
                                         Region r = (Region) regiones.get(i);
                             %>
-<tr>
+                            <tr>
                         <form name="administracionRegion" action="controladores/controladorCRUD.jsp" method="POST">
                             <th scope="row"><%=r.getId()%></th>
                             <input type="hidden" name="id" value="<%=r.getId()%>">
@@ -88,17 +88,18 @@
                             <td><input type="submit" class="btn btn-danger" name="eliminarRegion" value="Eliminar"></td>
                         </form>
                         </tr>
-                            <%
-                                    }
-                                } else {
-                                    session.setAttribute("mensaje", "Ha ocurrido algún error");
-                                    response.sendRedirect("index.jsp");
+                        <%
                                 }
-                            %>
+                            } else {
+                                session.setAttribute("mensaje", "Ha ocurrido algún error");
+                                response.sendRedirect("index.jsp");
+                            }
+                        %>
                         </tbody>
                     </table>
                 </div>
-                
+
+                <jsp:include page="recursos/footer.jsp"/>
             </div>
 
         </div>

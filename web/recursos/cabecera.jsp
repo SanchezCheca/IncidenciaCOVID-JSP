@@ -5,17 +5,32 @@
     </a>
     <div class = "collapse navbar-collapse" id = "navbarNavDropdown">
         <ul class = "navbar-nav">
-            <li class = "nav-item <?php
-                if (substr($dir, -9) == 'index.php') {
-                    echo 'active';
-                }
-                ?>">
+            <li class = "nav-item">
                 <a class = "nav-link" href = "index.jsp">Informes de incidencia</a>
             </li>
+            <%
+                Usuario u = null;
+                if (session.getAttribute("usuarioIniciado") != null) {
+                    u = (Usuario) session.getAttribute("usuarioIniciado");
+                    if (u.isAutor()) {
+            %>
+            <li class="nav-item">
+                <a class = "nav-link" href = "crearInforme.jsp">+Nuevo informe</a>
+            </li>
+            <%
+                    }
+                }
+            %>
         </ul>
         <div class = "dropdown ml-auto">
             <a class = "nav-link dropdown-toggle desplegable" href = "#" id = "navbarDropdownMenuLink" data-toggle = "dropdown" aria-haspopup = "true" aria-expanded = "false">
-                Perfil
+                <%
+                    if (u != null) {
+                        out.print("<i>" + u.getNombre() + "</i>");
+                    } else {
+                        out.print("Perfil");
+                    }
+                %>
             </a>
             <div class = "dropdown-menu" aria-labelledby = "navbarDropdownMenuLink">
 
@@ -25,8 +40,7 @@
 
                 %>
                 <form name="menu" action="controladores/controladorPrincipal.jsp" method="POST">
-                    <%                        Usuario u = (Usuario) session.getAttribute("usuarioIniciado");
-                        if (u.isAdmin()) {
+                    <%                        if (u.isAdmin()) {
                     %>
                     <input type="submit" name="administrarUsuarios" class="dropdown-item" value="Administrar usuarios">
                     <input type="submit" name="administrarRegiones" class="dropdown-item" value="Administrar regiones">

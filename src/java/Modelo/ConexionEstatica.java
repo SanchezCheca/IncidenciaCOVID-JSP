@@ -317,13 +317,200 @@ public class ConexionEstatica {
             System.out.println("Error: " + ex.getMessage());
         }
     }
-    
+
+    /**
+     * Actualiza el nombre de una región
+     *
+     * @param id
+     * @param nombre
+     */
     public static void actualizarRegion(int id, String nombre) {
         try {
             String sentencia = "UPDATE regiones SET nombre='" + nombre + "' WHERE id=" + id;
             ConexionEstatica.Sentencia_SQL.executeUpdate(sentencia);
         } catch (SQLException ex) {
             System.out.println("Error: " + ex.getMessage());
+        }
+    }
+
+    /**
+     * Devuelve true si ya existe un informe con ese nombre y para esa semana en
+     * la BD
+     *
+     * @param semana
+     * @param region
+     * @return
+     */
+    public static boolean isInforme(String semana, String region) {
+        boolean existe = false;
+
+        String consulta = "SELECT * FROM informes WHERE semana='" + semana + "' AND region='" + region + "'";
+        try {
+            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(consulta);
+            if (ConexionEstatica.Conj_Registros.next()) {
+                existe = true;
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error (isInforme): " + ex.getMessage());
+        }
+
+        return existe;
+    }
+
+    /**
+     * Guarda un nuevo informe en BD
+     *
+     * @param semana
+     * @param region
+     * @param nInfectados
+     * @param nFallecidos
+     * @param nAltas
+     * @param idAutor
+     */
+    public static void insertInforme(String semana, String region, int nInfectados, int nFallecidos, int nAltas, int idAutor) {
+        try {
+            String sentencia = "INSERT INTO informes VALUES(id, '" + semana + "', '" + region + "', " + nInfectados + ", " + nFallecidos + ", " + nAltas + ", " + idAutor + ")";
+            ConexionEstatica.Sentencia_SQL.executeUpdate(sentencia);
+        } catch (SQLException ex) {
+            System.out.println("Error al insertar informe: " + ex.getMessage());
+        }
+    }
+
+    /**
+     * Devuelve un ArrayList con todos los informes
+     *
+     * @return
+     */
+    public static ArrayList getAllInformes() {
+        String sentencia = "SELECT informes.id, informes.semana, regiones.nombre, informes.nInfectados, informes.nFallecidos, informes.nAltas, informes.idautor FROM informes INNER JOIN regiones ON informes.region=regiones.id";
+        ArrayList informes = new ArrayList();
+        int id, nInfectados, nFallecidos, nAltas, idAutor;
+        String semana, nombreRegion;
+        Informe informe;
+        try {
+            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(sentencia);
+            while (ConexionEstatica.Conj_Registros.next()) {
+                id = ConexionEstatica.Conj_Registros.getInt("id");
+                semana = ConexionEstatica.Conj_Registros.getString("semana");
+                nombreRegion = ConexionEstatica.Conj_Registros.getString("nombre");
+                nInfectados = ConexionEstatica.Conj_Registros.getInt("nInfectados");
+                nFallecidos = ConexionEstatica.Conj_Registros.getInt("nFallecidos");
+                nAltas = ConexionEstatica.Conj_Registros.getInt("nAltas");
+                idAutor = ConexionEstatica.Conj_Registros.getInt("idautor");
+
+                informe = new Informe(id, semana, nombreRegion, nInfectados, nFallecidos, nAltas, idAutor);
+                informes.add(informe);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error al recuperar informes: " + ex.getMessage());
+        }
+        return informes;
+    }
+
+    /**
+     * Devuelve las regiones UTILIZADAS (para filtro)
+     *
+     * @return
+     */
+    public static ArrayList getAllUniqueRegiones() {
+        String consulta = "SELECT * FROM regiones WHERE id IN (SELECT DISTINCT region FROM informes)";
+        ArrayList regiones = new ArrayList();
+        int id;
+        String nombre;
+        Region region;
+        try {
+            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(consulta);
+            while (ConexionEstatica.Conj_Registros.next()) {
+                id = ConexionEstatica.Conj_Registros.getInt("id");
+                nombre = ConexionEstatica.Conj_Registros.getString("nombre");
+                region = new Region(id, nombre);
+                regiones.add(region);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error al recuperar regiones unicas: " + ex.getMessage());
+        }
+        return regiones;
+    }
+
+    /**
+     * Devuelve todas las semanas UTILIZADAS
+     *
+     * @return
+     */
+    public static ArrayList getAllSemanas() {
+        ArrayList semanas = new ArrayList();
+        String sentencia = "SELECT DISTINCT semana FROM informes";
+        String semana;
+        try {
+            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(sentencia);
+            while (ConexionEstatica.Conj_Registros.next()) {
+                semana = ConexionEstatica.Conj_Registros.getString("semana");
+                semanas.add(semana);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error al recuperar semanas: " + ex.getMessage());
+        }
+        return semanas;
+    }
+
+    /**
+     * Devuelve un informe
+     *
+     * @param id
+     * @return
+     */
+    public static Informe getInforme(int id) {
+        Informe informe = null;
+        String consulta = "SELECT * FROM informes INNER JOIN regiones on informes.region=regiones.id WHERE informes.id=" + id;
+        try {
+            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(consulta);
+            if (ConexionEstatica.Conj_Registros.next()) {
+                String semana = ConexionEstatica.Conj_Registros.getString("semana");
+                String region = ConexionEstatica.Conj_Registros.getString("nombre");
+                int nInfectados = ConexionEstatica.Conj_Registros.getInt("nInfectados");
+                int nFallecidos = ConexionEstatica.Conj_Registros.getInt("nFallecidos");
+                int nAltas = ConexionEstatica.Conj_Registros.getInt("nAltas");
+                int idAutor = ConexionEstatica.Conj_Registros.getInt("idAutor");
+                
+                String nombreAutor = ConexionEstatica.getNombrePorId(idAutor);
+                informe = new Informe(id, semana, region, nInfectados, nFallecidos, nAltas, idAutor);
+                informe.setNombreAutor(nombreAutor);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error al recuperar informe: " + ex.getMessage());
+        }
+        return informe;
+    }
+
+    /**
+     * Devuelve el nombre de un usuario por su id
+     * @param id
+     * @return 
+     */
+    public static String getNombrePorId(int id) throws SQLException {
+        String consulta = "SELECT nombre FROM usuarios WHERE id=" + id;
+        String nombre = "";
+        ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(consulta);
+        if (ConexionEstatica.Conj_Registros.next()) {
+            nombre = ConexionEstatica.Conj_Registros.getString("nombre");
+        }
+        return nombre;
+    }
+    
+    /**
+     * Actualiza un informe
+     * @param id
+     * @param nInfectados
+     * @param nFallecidos
+     * @param nAltas
+     * @param idAutor 
+     */
+    public static void updateInforme (int id, int nInfectados, int nFallecidos, int nAltas, int idAutor) {
+        String sentencia = "UPDATE informes SET nInfectados=" + nInfectados + ", nFallecidos=" + nFallecidos + ", nAltas=" + nAltas + ", idAutor=" + idAutor + " WHERE id=" + id;
+        try {
+            ConexionEstatica.Sentencia_SQL.executeUpdate(sentencia);
+        } catch (SQLException ex) {
+            System.out.println("Error al actualizar informe: " + ex.getMessage());
         }
     }
 

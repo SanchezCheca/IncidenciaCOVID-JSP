@@ -45,6 +45,7 @@
                     <p>¿No tienes cuenta? <a href="registro.jsp">Regístrate</a></p>
                 </div>
                 
+                <jsp:include page="recursos/footer.jsp"/>
             </div>
 
         </div>
