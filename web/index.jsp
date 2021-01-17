@@ -42,11 +42,12 @@
                     if (request.getParameter("filtrar") != null) {
                         filtroRegion = request.getParameter("filtroRegion");
                         filtroSemana = request.getParameter("filtroSemana");
+                        System.out.println("Filtro semana: " + filtroSemana + " | Filtro region: " + filtroRegion);
 
                         Informe informe;
                         for (int i = 0; i < informes.size(); i++) {
                             informe = (Informe) informes.get(i);
-                            if ((informe.getSemana() == filtroSemana || filtroSemana == "TODAS") && (informe.getRegion() == filtroRegion || filtroRegion == "TODAS")) {
+                            if ((informe.getSemana().compareTo(filtroSemana) == 0 || filtroSemana.compareTo("TODAS") == 0) && (informe.getRegion().compareTo(filtroRegion) == 0 || filtroRegion.compareTo("TODAS") == 0)) {
                                 informesFiltrados.add(informe);
                             }
                         }
@@ -89,7 +90,7 @@
                                     for (int i = 0; i < regiones.size(); i++) {
                                         region = (Region) regiones.get(i);
                                 %>
-                                <option value="<%=region.getNombre()%>" <% if (filtroRegion != null && filtroRegion == region.getNombre()) {
+                                <option value="<%=region.getNombre()%>" <% if (filtroRegion != null && filtroRegion.compareTo(region.getNombre()) == 0) {
                                         out.print("selected");
                                     }
                                         %>>
@@ -111,7 +112,7 @@
                                 %>
                                 <option value="<%=semana%>" 
                                         <%
-                                            if (filtroSemana != null && filtroSemana == semana) {
+                                            if (filtroSemana != null && filtroSemana.compareTo(semana) == 0) {
                                                 out.print("selected");
                                             }
                                         %>><%=semana%></option>

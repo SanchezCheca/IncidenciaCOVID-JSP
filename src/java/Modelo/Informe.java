@@ -14,6 +14,7 @@ public class Informe {
     private int nFallecidos;
     private int nAltas;
     private int idAutor;
+    private String nombreAutor;
 
     //--------------------CONSTRUCTOR
     public Informe(int id, String semana, String region, int nInfectados, int nFallecidos, int nAltas, int idAutor) {
@@ -24,6 +25,11 @@ public class Informe {
         this.nFallecidos = nFallecidos;
         this.nAltas = nAltas;
         this.idAutor = idAutor;
+    }
+
+    //--------------------SET
+    public void setNombreAutor(String nombreAutor) {
+        this.nombreAutor = nombreAutor;
     }
 
     //--------------------GET
@@ -53,6 +59,10 @@ public class Informe {
 
     public int getIdAutor() {
         return idAutor;
+    }
+
+    public Informe(String nombreAutor) {
+        this.nombreAutor = nombreAutor;
     }
 
 }

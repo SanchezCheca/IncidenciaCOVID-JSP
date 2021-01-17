@@ -32,4 +32,14 @@
         response.sendRedirect("../crearInforme.jsp");
 
     }
+
+    /**
+     * Carga el informe de la BD y lo guarda en la sesión
+     */
+    if (request.getParameter("verInforme") != null) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        
+        ConexionEstatica.nueva();
+        //Informe informe = ConexionEstatica.get
+    }
 %>

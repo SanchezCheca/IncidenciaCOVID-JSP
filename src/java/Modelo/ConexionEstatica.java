@@ -453,4 +453,48 @@ public class ConexionEstatica {
         return semanas;
     }
 
+    /**
+     * Devuelve un informe
+     *
+     * @param id
+     * @return
+     */
+    public static Informe getInforme(int id) {
+        Informe informe = null;
+        String consulta = "SELECT * FROM informes INNER JOIN regiones on informes.region=regiones.id WHERE informes.id=" + id;
+        try {
+            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(consulta);
+            if (ConexionEstatica.Conj_Registros.next()) {
+                String semana = ConexionEstatica.Conj_Registros.getString("semana");
+                String region = ConexionEstatica.Conj_Registros.getString("nombre");
+                int nInfectados = ConexionEstatica.Conj_Registros.getInt("nInfectados");
+                int nFallecidos = ConexionEstatica.Conj_Registros.getInt("nFallecidos");
+                int nAltas = ConexionEstatica.Conj_Registros.getInt("nAltas");
+                int idAutor = ConexionEstatica.Conj_Registros.getInt("idAutor");
+                
+                String nombreAutor = ConexionEstatica.getNombrePorId(idAutor);
+                informe = new Informe(id, semana, region, nInfectados, nFallecidos, nAltas, idAutor);
+                informe.setNombreAutor(nombreAutor);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error al recuperar informe: " + ex.getMessage());
+        }
+        return informe;
+    }
+
+    /**
+     * Devuelve el nombre de un usuario por su id
+     * @param id
+     * @return 
+     */
+    public static String getNombrePorId(int id) throws SQLException {
+        String consulta = "SELECT nombre FROM usuarios WHERE id=" + id;
+        String nombre = "";
+        ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(consulta);
+        if (ConexionEstatica.Conj_Registros.next()) {
+            nombre = ConexionEstatica.Conj_Registros.getString("nombre");
+        }
+        return nombre;
+    }
+
 }
