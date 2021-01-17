@@ -496,5 +496,22 @@ public class ConexionEstatica {
         }
         return nombre;
     }
+    
+    /**
+     * Actualiza un informe
+     * @param id
+     * @param nInfectados
+     * @param nFallecidos
+     * @param nAltas
+     * @param idAutor 
+     */
+    public static void updateInforme (int id, int nInfectados, int nFallecidos, int nAltas, int idAutor) {
+        String sentencia = "UPDATE informes SET nInfectados=" + nInfectados + ", nFallecidos=" + nFallecidos + ", nAltas=" + nAltas + ", idAutor=" + idAutor + " WHERE id=" + id;
+        try {
+            ConexionEstatica.Sentencia_SQL.executeUpdate(sentencia);
+        } catch (SQLException ex) {
+            System.out.println("Error al actualizar informe: " + ex.getMessage());
+        }
+    }
 
 }

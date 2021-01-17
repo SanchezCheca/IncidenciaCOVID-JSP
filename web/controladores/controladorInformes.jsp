@@ -1,3 +1,4 @@
+<%@page import="Modelo.Informe"%>
 <%@page import="Modelo.Usuario"%>
 <%@page import="Modelo.ConexionEstatica"%>
 <%
@@ -38,8 +39,37 @@
      */
     if (request.getParameter("verInforme") != null) {
         int id = Integer.parseInt(request.getParameter("id"));
-        
+
         ConexionEstatica.nueva();
-        //Informe informe = ConexionEstatica.get
+        Informe informe = ConexionEstatica.getInforme(id);
+        ConexionEstatica.cerrarBD();
+
+        session.setAttribute("informe", informe);
+        response.sendRedirect("../verInforme.jsp");
+    }
+
+    /**
+     * Actualiza un informe
+     */
+    if (request.getParameter("actualizarInforme") != null) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        int nInfectados = Integer.parseInt(request.getParameter("nInfectados"));
+        int nFallecidos = Integer.parseInt(request.getParameter("nFallecidos"));
+        int nAltas = Integer.parseInt(request.getParameter("nAltas"));
+
+        if (session.getAttribute("usuarioIniciado") != null) {
+            Usuario u = (Usuario) session.getAttribute("usuarioIniciado");
+            int idAutor = u.getId();
+
+            ConexionEstatica.nueva();
+            ConexionEstatica.updateInforme(id, nInfectados, nFallecidos, nAltas, idAutor);
+            Informe i = ConexionEstatica.getInforme(id);
+            ConexionEstatica.cerrarBD();
+            session.setAttribute("informe", i);
+            session.setAttribute("mensaje", "Se ha actualizado el informe.");
+        } else {
+            session.setAttribute("mensaje", "Ha ocurrido algún error");
+        }
+        response.sendRedirect("../verInforme.jsp");
     }
 %>

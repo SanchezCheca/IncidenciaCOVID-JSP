@@ -61,8 +61,8 @@ public class Informe {
         return idAutor;
     }
 
-    public Informe(String nombreAutor) {
-        this.nombreAutor = nombreAutor;
+    public String getNombreAutor() {
+        return nombreAutor;
     }
 
 }

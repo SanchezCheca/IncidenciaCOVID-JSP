@@ -24,7 +24,13 @@
         </ul>
         <div class = "dropdown ml-auto">
             <a class = "nav-link dropdown-toggle desplegable" href = "#" id = "navbarDropdownMenuLink" data-toggle = "dropdown" aria-haspopup = "true" aria-expanded = "false">
-                Perfil
+                <%
+                    if (u != null) {
+                        out.print("<i>" + u.getNombre() + "</i>");
+                    } else {
+                        out.print("Perfil");
+                    }
+                %>
             </a>
             <div class = "dropdown-menu" aria-labelledby = "navbarDropdownMenuLink">
 
