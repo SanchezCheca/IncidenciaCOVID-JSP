@@ -1,3 +1,6 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="Modelo.Calendario"%>
+<%@page import="java.util.Date"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="es">
@@ -23,8 +26,10 @@
         <div  class="containter d-flex justify-content-center">
             <div class="row principal rounded">
                 <jsp:include page="recursos/cabecera.jsp"/>
-
+                <%
+                    
                 
+                %>
 
                 <jsp:include page="recursos/footer.jsp"/>
             </div>

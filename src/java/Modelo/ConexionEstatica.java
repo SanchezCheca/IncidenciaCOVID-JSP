@@ -317,13 +317,61 @@ public class ConexionEstatica {
             System.out.println("Error: " + ex.getMessage());
         }
     }
-    
+
+    /**
+     * Actualiza el nombre de una región
+     *
+     * @param id
+     * @param nombre
+     */
     public static void actualizarRegion(int id, String nombre) {
         try {
             String sentencia = "UPDATE regiones SET nombre='" + nombre + "' WHERE id=" + id;
             ConexionEstatica.Sentencia_SQL.executeUpdate(sentencia);
         } catch (SQLException ex) {
             System.out.println("Error: " + ex.getMessage());
+        }
+    }
+
+    /**
+     * Devuelve true si ya existe un informe con ese nombre y para esa semana en
+     * la BD
+     *
+     * @param semana
+     * @param region
+     * @return
+     */
+    public static boolean isInforme(String semana, String region) {
+        boolean existe = false;
+
+        String consulta = "SELECT * FROM informes WHERE semana='" + semana + "' AND region='" + region + "'";
+        try {
+            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(consulta);
+            if (ConexionEstatica.Conj_Registros.next()) {
+                existe = true;
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error (isInforme): " + ex.getMessage());
+        }
+
+        return existe;
+    }
+    
+    /**
+     * Guarda un nuevo informe en BD
+     * @param semana
+     * @param region
+     * @param nInfectados
+     * @param nFallecidos
+     * @param nAltas
+     * @param idAutor 
+     */
+    public static void insertInforme(String semana, String region, int nInfectados, int nFallecidos, int nAltas, int idAutor) {
+        try {
+            String sentencia = "INSERT INTO informes VALUES(id, '" + semana + "', '" + region + "', " + nInfectados + ", " + nFallecidos + ", " + nAltas + ", " + idAutor + ")";
+            ConexionEstatica.Sentencia_SQL.executeUpdate(sentencia);
+        } catch (SQLException ex) {
+            System.out.println("Error al insertar informe: " + ex.getMessage());
         }
     }
 
